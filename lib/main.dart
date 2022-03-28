@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'calc_button.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,7 +23,7 @@ class Calculator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _h = MediaQuery.of(context).size.height;
-    final _w = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       body: SafeArea(
@@ -65,33 +66,7 @@ class Calculator extends StatelessWidget {
                     .map(
                       (row) => Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: row
-                            .map(
-                              (text) => GestureDetector(
-                                child: Container(
-                                  child: Center(child: Text(text)),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.grey,
-                                        offset: Offset(1, 1),
-                                        blurRadius: 1,
-                                        spreadRadius: 1,
-                                      ),
-                                    ],
-                                    color: Colors.white,
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 8,
-                                  ),
-                                  width: (_w - 96) / 5,
-                                ),
-                                onTap: () {},
-                              ),
-                            )
-                            .toList(),
+                        children: row.map((text) => CalcButton(text)).toList(),
                       ),
                     )
                     .toList(),
@@ -117,30 +92,9 @@ class Calculator extends StatelessWidget {
                                   .map(
                                     (text) => Opacity(
                                       opacity: text == '' ? 0 : 1,
-                                      child: GestureDetector(
-                                        child: Container(
-                                          child: Center(child: Text(text)),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            boxShadow: const [
-                                              BoxShadow(
-                                                color: Colors.grey,
-                                                offset: Offset(1, 1),
-                                                blurRadius: 2,
-                                                spreadRadius: 0.5,
-                                              ),
-                                            ],
-                                            color: Colors.white,
-                                          ),
-                                          height: ((_h * 0.4) - 72) / 4,
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 8,
-                                            vertical: 8,
-                                          ),
-                                          width: (_w - 96) / 5,
-                                        ),
-                                        onTap: () {},
+                                      child: CalcButton(
+                                        text,
+                                        height: ((_h * 0.4) - 72) / 4,
                                       ),
                                     ),
                                   )
@@ -149,7 +103,7 @@ class Calculator extends StatelessWidget {
                           )
                           .toList(),
                     ),
-                    width: _w * 0.6,
+                    width: screenWidth * 0.6,
                   ),
                   Container(
                     color: Colors.grey[400],
@@ -160,71 +114,30 @@ class Calculator extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: ['/', 'x', '-', '+']
                               .map(
-                                (text) => GestureDetector(
-                                  child: Container(
-                                    child: Center(child: Text(text)),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      boxShadow: const [
-                                        BoxShadow(
-                                          color: Colors.grey,
-                                          offset: Offset(1, 1),
-                                          blurRadius: 2,
-                                          spreadRadius: 0.5,
-                                        ),
-                                      ],
-                                      color: Colors.white,
-                                    ),
-                                    height: ((_h * 0.4) - 72) / 4,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 8,
-                                    ),
-                                    width: (_w - 96) / 5,
-                                  ),
-                                  onTap: () {},
+                                (text) => CalcButton(
+                                  text,
+                                  height: ((_h * 0.4) - 72) / 4,
                                 ),
                               )
                               .toList(),
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: ['DEL', '=']
-                              .map(
-                                (text) => GestureDetector(
-                                  child: Container(
-                                    child: Center(child: Text(text)),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      boxShadow: const [
-                                        BoxShadow(
-                                          color: Colors.grey,
-                                          offset: Offset(1, 1),
-                                          blurRadius: 2,
-                                          spreadRadius: 0.5,
-                                        ),
-                                      ],
-                                      color: text == '='
-                                          ? Colors.green
-                                          : Colors.white,
-                                    ),
-                                    height: text == '='
-                                        ? 24 + (((_h * 0.4) - 72) / 4) * 3
-                                        : ((_h * 0.4) - 72) / 4,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 8,
-                                    ),
-                                    width: (_w - 96) / 5,
-                                  ),
-                                  onTap: () {},
-                                ),
-                              )
-                              .toList(),
+                          children: [
+                            CalcButton(
+                              'DEL',
+                              height: ((_h * 0.4) - 72) / 4,
+                            ),
+                            CalcButton(
+                              '=',
+                              color: Colors.green,
+                              height: 24 + (((_h * 0.4) - 72) / 4) * 3,
+                            )
+                          ],
                         ),
                       ],
                     ),
-                    width: _w * 0.4,
+                    width: screenWidth * 0.4,
                   ),
                 ],
               ),
