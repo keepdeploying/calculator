@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-import '../../../models/button_type.dart';
 import '../../../models/calc_button.dart';
 import 'calc_button_viewmodel.dart';
 
@@ -15,13 +14,9 @@ class CalcButtonView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<CalcButtonViewModel>.reactive(
+    return ViewModelBuilder<CalcButtonViewModel>.nonReactive(
       viewModelBuilder: () => CalcButtonViewModel(),
       builder: (context, model, child) {
-        if (calcButton.type == ButtonType.degRad) {
-          calcButton.text = model.degRad;
-        }
-
         return GestureDetector(
           child: Container(
             child: Center(child: Text(calcButton.text)),

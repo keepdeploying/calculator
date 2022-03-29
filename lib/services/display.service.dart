@@ -1,127 +1,28 @@
 import 'package:injectable/injectable.dart';
 import 'package:stacked/stacked.dart';
 
+import '../app/locator.dart';
 import '../models/button_type.dart';
 import '../models/calc_button.dart';
-
-// ignore: constant_identifier_names
-enum DegRad { DEG, RAD }
+import 'calculator.service.dart';
 
 @singleton
 class DisplayService with ReactiveServiceMixin {
-  /// contains either [CalcButton]s, that are operators or numbers
-  /// that are in [String] form.
+  /// contains either operator [CalcButton]s or numbers that as [String]s.
   final _calculation = ReactiveValue<List<dynamic>>(['']);
-  final _degRad = ReactiveValue<DegRad>(DegRad.DEG);
+
+  final _calculator = locator<CalculatorService>();
   final _result = ReactiveValue<String>('');
   String get current => _calculation.value.map((e) => e.toString()).join(' ');
-  DegRad get degRad => _degRad.value;
   String get result => _result.value;
 
   DisplayService() {
-    listenToReactiveValues([_calculation, _degRad, _result]);
+    listenToReactiveValues([_calculation, _result]);
   }
-
-  void _reconcileBrackets() {
-    var c = _calculation.value;
-    int opens = 0;
-    int closes = 0;
-    if (c.isNotEmpty) {
-      for (var member in c) {
-        if (member.toString() == '(') opens++;
-        if (member.toString() == ')') closes++;
-      }
-      while (opens > closes) {
-        c.add(bracketClose);
-        closes++;
-      }
-      while (closes > opens) {
-        for (var i = c.length - 1; i > 0; i--) {
-          if (c[i].toString() == ')') {
-            c.removeAt(i);
-            break;
-          }
-        }
-        closes--;
-      }
-    }
-  }
-
-  /// to avoid errors, return either 0 or 1 to complete an operation
-  int _extraNumber(CalcButton cb) {
-    return ['INV', 'ln', 'log', 'e', '√', 'x', '/'].contains(cb.text) ? 1 : 0;
-  }
-
-  /// Recursively solve the current display's contents
-  num _solver(List<dynamic> c) {
-    if (c.isNotEmpty) {
-      num hold = 0;
-      bool hasSetHold = false;
-      for (var i = 0; i < c.length; i++) {
-        if (c[i] is num) {
-          hold = c[i];
-          hasSetHold = true;
-          if (i == c.length - 1) return hold;
-        } else if (c[i].type == ButtonType.operatorWait) {
-          if (['(', ')'].contains(c[i].text)) {
-            if (i < c.length - 1) {
-              return (hasSetHold ? hold : 1) * _solver(c.sublist(i + 1));
-            } else {
-              return hold;
-            }
-          } else {
-            num next;
-            if (i < c.length - 2) {
-              next = _solver(c.sublist(i + 1));
-            } else {
-              if (i == c.length - 2 && c[i + 1] is num) {
-                next = c[i + 1];
-              } else {
-                next = _extraNumber(c[i]);
-              }
-            }
-            return c[i].math(hasSetHold ? hold : _extraNumber(c[i]), next);
-          }
-        } else if (c[i].type == ButtonType.operatorExecute) {
-          num next;
-          if (!hasSetHold) {
-            if (i < c.length - 1) {
-              next = _solver(c.sublist(i + 1));
-            } else {
-              next = _extraNumber(c[i]);
-            }
-          } else {
-            next = hold;
-          }
-          return c[i].math(next);
-        }
-      }
-      return 0;
-    } else {
-      return 0;
-    }
-  }
-
-  void _calculate() {
-    var c = _calculation.value;
-    if (c.isNotEmpty) {
-      if (c.length == 1) {
-        _result.value = c[0] is String ? c[0] : '0';
-      } else {
-        _reconcileBrackets();
-        c.asMap().entries.forEach((e) {
-          // make all numbers in string form to be numbers for solving
-          if (e.value is String) c[e.key] = num.parse(e.value);
-        });
-        _result.value = _solver(c).toString();
-      }
-    }
-  }
-
+  
   void updateDisplay(CalcButton calcButton) {
     switch (calcButton.type) {
       case ButtonType.degRad:
-        _degRad.value = _degRad.value == DegRad.DEG ? DegRad.RAD : DegRad.DEG;
         break;
       case ButtonType.delete:
         if (_result.value != '') {
@@ -138,7 +39,9 @@ class DisplayService with ReactiveServiceMixin {
         }
         break;
       case ButtonType.equals:
-        if (_result.value == '') _calculate();
+        if (_result.value == '') {
+          _result.value = _calculator.calculate(_calculation.value);
+        }
         break;
       case ButtonType.operatorExecute:
         if (_result.value != '') {
@@ -159,7 +62,7 @@ class DisplayService with ReactiveServiceMixin {
           } else {
             c.insert(0, calcButton);
           }
-          _calculate();
+          _result.value = _calculator.calculate(c);
         }
         break;
       case ButtonType.operatorWait:
@@ -181,6 +84,7 @@ class DisplayService with ReactiveServiceMixin {
           c.add(calcButton);
         } else if (t == '(') {
           // permit only the addition of brackets to empty screen
+          // among others waitOperators
           c.add(calcButton);
         }
         break;

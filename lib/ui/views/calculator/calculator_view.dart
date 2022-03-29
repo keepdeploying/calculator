@@ -1,17 +1,21 @@
-import 'package:calculator/models/calc_button.dart';
-import 'package:calculator/ui/views/calculator/calculator_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../models/button_type.dart';
+import '../../../models/calc_button.dart';
+import '../../../models/deg_rad_button.dart';
 import '../calc_button/calc_button_view.dart';
+import '../deg_rad_button/deg_rad_button_view.dart';
+import '../deg_rad_state/deg_rad_state_view.dart';
+import '../display/display_view.dart';
+import 'calculator_viewmodel.dart';
 
 class CalculatorView extends StatelessWidget {
   const CalculatorView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<CalculatorViewModel>.reactive(
+    return ViewModelBuilder<CalculatorViewModel>.nonReactive(
         viewModelBuilder: () => CalculatorViewModel(),
         builder: (context, model, child) {
           final _h = MediaQuery.of(context).size.height;
@@ -29,36 +33,14 @@ class CalculatorView extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              model.degRad.toString().split('.')[1],
-                              style: const TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            const DegRadStateView(),
                             IconButton(
                               onPressed: () {},
                               icon: const Icon(Icons.history),
                             ),
                           ],
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              model.current,
-                              style: Theme.of(context).textTheme.headline4,
-                            ),
-                            if (model.result != '')
-                              Text(
-                                model.result,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline3!
-                                    .copyWith(color: Colors.black),
-                              ),
-                          ],
-                        ),
+                        const DisplayView(),
                       ],
                     ),
                     height: MediaQuery.of(context).size.height * 0.35,
@@ -72,8 +54,13 @@ class CalculatorView extends StatelessWidget {
                           .map(
                             (row) => Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children:
-                                  row.map((cb) => CalcButtonView(cb)).toList(),
+                              children: row
+                                  .map(
+                                    (cb) => cb is DegRadButton
+                                        ? DegRadButtonView(cb)
+                                        : CalcButtonView(cb),
+                                  )
+                                  .toList(),
                             ),
                           )
                           .toList(),
@@ -138,11 +125,11 @@ class CalculatorView extends StatelessWidget {
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
                                   CalcButtonView(
-                                    CalcButton('DEL', ButtonType.delete),
+                                    const CalcButton('DEL', ButtonType.delete),
                                     height: ((_h * 0.4) - 72) / 4,
                                   ),
                                   CalcButtonView(
-                                    CalcButton('=', ButtonType.equals),
+                                    const CalcButton('=', ButtonType.equals),
                                     color: Colors.green,
                                     height: 24 + (((_h * 0.4) - 72) / 4) * 3,
                                   )
