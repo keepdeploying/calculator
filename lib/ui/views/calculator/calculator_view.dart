@@ -36,14 +36,14 @@ class CalculatorView extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            PopupMenuButton(
-                              itemBuilder: (context) => const [
-                                PopupMenuItem(child: Text('History')),
-                              ],
-                            )
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.history),
+                            ),
                           ],
                         ),
                         Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
                               model.current,
@@ -52,7 +52,10 @@ class CalculatorView extends StatelessWidget {
                             if (model.result != '')
                               Text(
                                 model.result,
-                                style: Theme.of(context).textTheme.headline3,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline3!
+                                    .copyWith(color: Colors.black),
                               ),
                           ],
                         ),
@@ -121,13 +124,10 @@ class CalculatorView extends StatelessWidget {
                               Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
-                                children: baseWaitOperatorTexts
+                                children: baseWaitOperators
                                     .map(
-                                      (text) => CalcButtonView(
-                                        CalcButton(
-                                          text,
-                                          ButtonType.operatorWait,
-                                        ),
+                                      (cb) => CalcButtonView(
+                                        cb,
                                         height: ((_h * 0.4) - 72) / 4,
                                       ),
                                     )
