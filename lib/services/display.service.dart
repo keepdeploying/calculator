@@ -4,14 +4,17 @@ import 'package:stacked/stacked.dart';
 import '../app/locator.dart';
 import '../models/button_type.dart';
 import '../models/calc_button.dart';
+import '../models/calculation.dart';
 import 'calculator.service.dart';
+import 'history.service.dart';
 
 @singleton
 class DisplayService with ReactiveServiceMixin {
   /// contains either operator [CalcButton]s or numbers that as [String]s.
-  final _calculation = ReactiveValue<List<dynamic>>(['']);
+  final _calculation = ReactiveValue<List<dynamic>>([]);
 
   final _calculator = locator<CalculatorService>();
+  final _history = locator<HistoryService>();
   final _result = ReactiveValue<String>('');
   String get current => _calculation.value.map((e) => e.toString()).join(' ');
   String get result => _result.value;
@@ -19,7 +22,7 @@ class DisplayService with ReactiveServiceMixin {
   DisplayService() {
     listenToReactiveValues([_calculation, _result]);
   }
-  
+
   void updateDisplay(CalcButton calcButton) {
     switch (calcButton.type) {
       case ButtonType.degRad:
@@ -41,6 +44,7 @@ class DisplayService with ReactiveServiceMixin {
       case ButtonType.equals:
         if (_result.value == '') {
           _result.value = _calculator.calculate(_calculation.value);
+          _history.record(Calculation(_calculation.value, _result.value));
         }
         break;
       case ButtonType.operatorExecute:
@@ -63,6 +67,7 @@ class DisplayService with ReactiveServiceMixin {
             c.insert(0, calcButton);
           }
           _result.value = _calculator.calculate(c);
+          _history.record(Calculation(_calculation.value, _result.value));
         }
         break;
       case ButtonType.operatorWait:

@@ -40,7 +40,7 @@ class CalcButtonView extends StatelessWidget {
                 child: Text(
                   calcButton.text,
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 18,
                     color: color != null ? Colors.white : Colors.black,
                   ),
                 ),

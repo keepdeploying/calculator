@@ -38,7 +38,7 @@ class DegRadButtonView extends StatelessWidget {
               child: Center(
                 child: Text(
                   model.current,
-                  style: const TextStyle(fontSize: 20),
+                  style: const TextStyle(fontSize: 18),
                 ),
               ),
               height: height,

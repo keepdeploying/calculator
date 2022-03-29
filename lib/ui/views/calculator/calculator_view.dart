@@ -8,6 +8,7 @@ import '../calc_button/calc_button_view.dart';
 import '../deg_rad_button/deg_rad_button_view.dart';
 import '../deg_rad_state/deg_rad_state_view.dart';
 import '../display/display_view.dart';
+import '../history/history_view.dart';
 import 'calculator_viewmodel.dart';
 
 const kGreenColor = Color(0xFF72A376);
@@ -19,7 +20,7 @@ class CalculatorView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<CalculatorViewModel>.nonReactive(
         viewModelBuilder: () => CalculatorViewModel(),
-        builder: (context, model, child) {
+        builder: (context, model, _) {
           final _h = MediaQuery.of(context).size.height;
           final screenWidth = MediaQuery.of(context).size.width;
 
@@ -37,8 +38,33 @@ class CalculatorView extends StatelessWidget {
                           children: [
                             const DegRadStateView(),
                             IconButton(
-                              onPressed: () {},
                               icon: const Icon(Icons.history),
+                              onPressed: () {
+                                showGeneralDialog(
+                                  context: context,
+                                  barrierDismissible: true,
+                                  transitionDuration:
+                                      const Duration(milliseconds: 500),
+                                  barrierLabel:
+                                      MaterialLocalizations.of(context)
+                                          .dialogLabel,
+                                  pageBuilder: (context, _, __) =>
+                                      const HistoryView(),
+                                  transitionBuilder: (context, animation,
+                                      secondaryAnimation, child) {
+                                    return SlideTransition(
+                                      position: CurvedAnimation(
+                                        parent: animation,
+                                        curve: Curves.easeOut,
+                                      ).drive(Tween<Offset>(
+                                        begin: const Offset(0, -1.0),
+                                        end: Offset.zero,
+                                      )),
+                                      child: child,
+                                    );
+                                  },
+                                );
+                              },
                             ),
                           ],
                         ),
