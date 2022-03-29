@@ -10,4 +10,6 @@ class CalculatorViewModel extends ReactiveViewModel {
   List<ReactiveServiceMixin> get reactiveServices => [_displayService];
 
   String get current => _displayService.current;
+  DegRad get degRad => _displayService.degRad;
+  String get result => _displayService.result;
 }

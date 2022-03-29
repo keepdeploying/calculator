@@ -1,7 +1,9 @@
+import 'package:calculator/models/calc_button.dart';
 import 'package:calculator/ui/views/calculator/calculator_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../../models/button_type.dart';
 import '../calc_button/calc_button_view.dart';
 
 class CalculatorView extends StatelessWidget {
@@ -27,9 +29,9 @@ class CalculatorView extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              'DEG',
-                              style: TextStyle(
+                            Text(
+                              model.degRad.toString().split('.')[1],
+                              style: const TextStyle(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -41,9 +43,18 @@ class CalculatorView extends StatelessWidget {
                             )
                           ],
                         ),
-                        Text(
-                          model.current,
-                          style: Theme.of(context).textTheme.headline6,
+                        Column(
+                          children: [
+                            Text(
+                              model.current,
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                            if (model.result != '')
+                              Text(
+                                model.result,
+                                style: Theme.of(context).textTheme.headline3,
+                              ),
+                          ],
                         ),
                       ],
                     ),
@@ -54,17 +65,12 @@ class CalculatorView extends StatelessWidget {
                     color: Colors.green,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ['INV', 'RAD', 'sin', 'cos', 'tan'],
-                        ['%', 'ln', 'log', '!', '^'],
-                        ['sin', 'e', '(', ')', 's']
-                      ]
+                      children: moreOperators
                           .map(
                             (row) => Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: row
-                                  .map((text) => CalcButtonView(text))
-                                  .toList(),
+                              children:
+                                  row.map((cb) => CalcButtonView(cb)).toList(),
                             ),
                           )
                           .toList(),
@@ -92,7 +98,10 @@ class CalculatorView extends StatelessWidget {
                                           (text) => Opacity(
                                             opacity: text == '' ? 0 : 1,
                                             child: CalcButtonView(
-                                              text,
+                                              CalcButton(
+                                                text,
+                                                ButtonType.number,
+                                              ),
                                               height: ((_h * 0.4) - 72) / 4,
                                             ),
                                           ),
@@ -112,10 +121,13 @@ class CalculatorView extends StatelessWidget {
                               Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
-                                children: ['/', 'x', '-', '+']
+                                children: baseWaitOperatorTexts
                                     .map(
                                       (text) => CalcButtonView(
-                                        text,
+                                        CalcButton(
+                                          text,
+                                          ButtonType.operatorWait,
+                                        ),
                                         height: ((_h * 0.4) - 72) / 4,
                                       ),
                                     )
@@ -126,11 +138,11 @@ class CalculatorView extends StatelessWidget {
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
                                   CalcButtonView(
-                                    'DEL',
+                                    CalcButton('DEL', ButtonType.delete),
                                     height: ((_h * 0.4) - 72) / 4,
                                   ),
                                   CalcButtonView(
-                                    '=',
+                                    CalcButton('=', ButtonType.equals),
                                     color: Colors.green,
                                     height: 24 + (((_h * 0.4) - 72) / 4) * 3,
                                   )
