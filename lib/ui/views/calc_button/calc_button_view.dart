@@ -19,7 +19,14 @@ class CalcButtonView extends StatelessWidget {
       builder: (context, model, child) {
         return GestureDetector(
           child: Container(
-            child: Center(child: Text(calcButton.text)),
+            child: Center(
+                child: Text(
+              calcButton.text,
+              style: TextStyle(
+                fontSize: 20,
+                color: color != null ? Colors.white : Colors.black,
+              ),
+            )),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               boxShadow: const [

@@ -18,7 +18,12 @@ class DegRadButtonView extends StatelessWidget {
       viewModelBuilder: () => DegRadButtonViewModel(),
       builder: (context, model, child) => GestureDetector(
         child: Container(
-          child: Center(child: Text(model.current)),
+          child: Center(
+            child: Text(
+              model.current,
+              style: const TextStyle(fontSize: 20),
+            ),
+          ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             boxShadow: const [

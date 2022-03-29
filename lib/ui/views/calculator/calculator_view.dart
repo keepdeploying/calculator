@@ -10,6 +10,8 @@ import '../deg_rad_state/deg_rad_state_view.dart';
 import '../display/display_view.dart';
 import 'calculator_viewmodel.dart';
 
+const kGreenColor = Color(0xFF72A376);
+
 class CalculatorView extends StatelessWidget {
   const CalculatorView({Key? key}) : super(key: key);
 
@@ -47,7 +49,7 @@ class CalculatorView extends StatelessWidget {
                     padding: const EdgeInsets.all(16),
                   ),
                   Container(
-                    color: Colors.green,
+                    color: kGreenColor,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: moreOperators
@@ -104,7 +106,7 @@ class CalculatorView extends StatelessWidget {
                           width: screenWidth * 0.6,
                         ),
                         Container(
-                          color: Colors.grey[400],
+                          color: const Color(0xFFF1F1F1),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -130,7 +132,7 @@ class CalculatorView extends StatelessWidget {
                                   ),
                                   CalcButtonView(
                                     const CalcButton('=', ButtonType.equals),
-                                    color: Colors.green,
+                                    color: kGreenColor,
                                     height: 24 + (((_h * 0.4) - 72) / 4) * 3,
                                   )
                                 ],
