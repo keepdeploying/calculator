@@ -15,5 +15,5 @@ class DegRadButtonViewModel extends ReactiveViewModel {
         .split('.')[1];
   }
 
-  void pressed() => _degRadService.toggle();
+  void toggle() => _degRadService.toggle();
 }

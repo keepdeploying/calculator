@@ -16,34 +16,41 @@ class DegRadButtonView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<DegRadButtonViewModel>.reactive(
       viewModelBuilder: () => DegRadButtonViewModel(),
-      builder: (context, model, child) => GestureDetector(
-        child: Container(
-          child: Center(
-            child: Text(
-              model.current,
-              style: const TextStyle(fontSize: 20),
+      builder: (context, model, child) => Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.grey,
+              offset: Offset(1, 1),
+              blurRadius: 2,
+              spreadRadius: 0.5,
             ),
-          ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.grey,
-                offset: Offset(1, 1),
-                blurRadius: 2,
-                spreadRadius: 0.5,
-              ),
-            ],
-            color: color ?? Colors.white,
-          ),
-          height: height,
-          padding: const EdgeInsets.symmetric(
-            horizontal: 8,
-            vertical: 8,
-          ),
-          width: (MediaQuery.of(context).size.width - 96) / 5,
+          ],
+          color: color ?? Colors.white,
         ),
-        onTap: () => model.pressed(),
+        child: Material(
+          borderRadius: BorderRadius.circular(12),
+          color: color ?? Colors.white,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              child: Center(
+                child: Text(
+                  model.current,
+                  style: const TextStyle(fontSize: 20),
+                ),
+              ),
+              height: height,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8,
+                vertical: 8,
+              ),
+              width: (MediaQuery.of(context).size.width - 96) / 5,
+            ),
+            onTap: () => model.toggle(),
+          ),
+        ),
       ),
     );
   }
