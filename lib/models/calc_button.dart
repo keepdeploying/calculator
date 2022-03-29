@@ -62,7 +62,7 @@ final moreOperators = [
     CalcButton(
       '!',
       ButtonType.operatorExecute,
-      (n) => _factorial(double.parse(n).truncate()),
+      (n) => _factorial(n.truncate()),
     ),
     const CalcButton('^', ButtonType.operatorWait, pow),
   ],
