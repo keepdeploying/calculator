@@ -26,13 +26,13 @@ class HistoryView extends StatelessWidget {
                     (entry) => [
                       Text(
                         entry.value.display.map((e) => e.toString()).join(' '),
-                        style: Theme.of(context).textTheme.headline4,
+                        style: Theme.of(context).textTheme.headlineMedium,
                       ),
                       Text(
                         entry.value.result,
                         style: Theme.of(context)
                             .textTheme
-                            .headline4!
+                            .headlineMedium!
                             .copyWith(color: Colors.black),
                       ),
                       if (entry.key < model.current.length - 1) ...[

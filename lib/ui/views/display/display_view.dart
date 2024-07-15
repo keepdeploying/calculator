@@ -15,14 +15,14 @@ class DisplayView extends StatelessWidget {
         children: [
           Text(
             model.current,
-            style: Theme.of(context).textTheme.headline4,
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
           if (model.result != '')
             Text(
               model.result,
               style: Theme.of(context)
                   .textTheme
-                  .headline3!
+                  .headlineMedium!
                   .copyWith(color: Colors.black),
             ),
         ],
